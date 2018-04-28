@@ -1,0 +1,27 @@
+name: prometheus-lab
+version: 2.2.1
+summary: Prometheus
+description: |
+  Prometheus is a system monitoring tool.
+architectures: [armhf]
+confinement: devmode
+
+parts:
+  config-builder:
+    plugin: python
+    python-version: python3
+    source: config-builder
+  prometheus:
+    plugin: dump
+    source: https://github.com/prometheus/prometheus/releases/download/v$SNAPCRAFT_PROJECT_VERSION/prometheus-$SNAPCRAFT_PROJECT_VERSION.linux-armv7.tar.gz
+
+apps:
+  config-builder:
+    command: python config-builder.py
+  #  daemon: oneshot
+  prometheus:
+    command: prometheus --config.file="$SNAP_COMMON/prometheus.yml"
+    daemon: simple
+    plugs:
+    - network
+
